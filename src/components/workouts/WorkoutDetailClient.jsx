@@ -1,13 +1,14 @@
 "use client";
 
 import Image from "next/image";
-import { CalendarDays, Bookmark } from "lucide-react";
+import { CalendarDays, Bookmark, Check, ShieldAlert } from "lucide-react";
 import { useState, useCallback } from "react";
 import { useWorkout } from "@/context/WorkoutContext";
 import Toast from "@/components/Shared/Toast";
 
 export default function WorkoutDetailClient({ workout }) {
   const {
+    id,
     name,
     image,
     description,
@@ -22,19 +23,35 @@ export default function WorkoutDetailClient({ workout }) {
     instructions = [],
   } = workout;
 
-  const { addToPlan, addToSaved } = useWorkout();
+  const { plan, saved, addToPlan, addToSaved } = useWorkout();
   const [toast, setToast] = useState(null);
+
+  const isInPlan = plan.some((item) => item.id === id);
+  const isSaved = saved.some((item) => item.id === id);
+  const isPlanFull = plan.length >= 5;
 
   const showToast = useCallback((message, type) => {
     setToast({ message, type });
   }, []);
 
   const handleAddToPlan = () => {
+    if (isInPlan) {
+      showToast(`"${name}" is already in today's plan!`, "error");
+      return;
+    }
+    if (isPlanFull) {
+      showToast("Plan is full! Maximum cap of 5 lifts reached.", "error");
+      return;
+    }
     const result = addToPlan(workout);
     showToast(result.message, result.success ? "success" : "error");
   };
 
   const handleSaveForLater = () => {
+    if (isSaved) {
+      showToast(`"${name}" is already saved!`, "error");
+      return;
+    }
     const result = addToSaved(workout);
     showToast(result.message, result.success ? "success" : "error");
   };
@@ -56,7 +73,7 @@ export default function WorkoutDetailClient({ workout }) {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
             {/* ── Left: Image ── */}
-            <div className="relative w-full aspect-[4/4.5] rounded-2xl overflow-hidden shadow-2xl">
+            <div className="relative w-full aspect-[4/4.5] rounded-2xl overflow-hidden shadow-2xl bg-base-300">
               <Image
                 src={image}
                 alt={name}
@@ -72,7 +89,7 @@ export default function WorkoutDetailClient({ workout }) {
 
               {/* Title & Description */}
               <div>
-                <h1 className="text-4xl font-black uppercase tracking-wide font-oswald">
+                <h1 className="text-4xl font-black uppercase tracking-wide font-oswald text-white">
                   {name}
                 </h1>
                 <p className="mt-2 text-base-content/70 text-base leading-relaxed">
@@ -114,7 +131,7 @@ export default function WorkoutDetailClient({ workout }) {
               {/* Instructions */}
               {instructions.length > 0 && (
                 <div>
-                  <h2 className="text-lg font-black uppercase tracking-widest mb-3">
+                  <h2 className="text-lg font-black uppercase tracking-widest mb-3 text-white">
                     Instructions
                   </h2>
                   <ol className="flex flex-col gap-2.5 list-decimal list-inside">
@@ -128,20 +145,57 @@ export default function WorkoutDetailClient({ workout }) {
               )}
 
               {/* CTA Buttons */}
-              <div className="flex flex-wrap gap-3 mt-2">
+              <div className="flex flex-wrap items-center gap-3 mt-2">
+                {/* Add to today's plan */}
                 <button
                   onClick={handleAddToPlan}
-                  className="btn btn-success gap-2 uppercase tracking-wider font-bold px-6"
+                  disabled={isInPlan || (isPlanFull && !isInPlan)}
+                  className={`btn gap-2 uppercase tracking-wider font-bold px-6 transition-all ${
+                    isInPlan
+                      ? "btn-disabled bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                      : isPlanFull
+                      ? "btn-disabled bg-gray-800 text-gray-500 border border-gray-700"
+                      : "btn-success"
+                  }`}
                 >
-                  <CalendarDays size={17} />
-                  Add to today&apos;s plan
+                  {isInPlan ? (
+                    <>
+                      <Check size={17} className="stroke-[3]" />
+                      Added to today&apos;s plan
+                    </>
+                  ) : isPlanFull ? (
+                    <>
+                      <ShieldAlert size={17} />
+                      Plan is Full (5/5)
+                    </>
+                  ) : (
+                    <>
+                      <CalendarDays size={17} />
+                      Add to today&apos;s plan
+                    </>
+                  )}
                 </button>
+
+                {/* Save for later */}
                 <button
                   onClick={handleSaveForLater}
-                  className="btn btn-outline gap-2 uppercase tracking-wider font-semibold px-6"
+                  className={`btn gap-2 uppercase tracking-wider font-semibold px-6 transition-all ${
+                    isSaved
+                      ? "btn-outline border-[#ccff00] text-[#ccff00] bg-[#ccff00]/10"
+                      : "btn-outline border-gray-700 hover:border-gray-500 text-gray-200"
+                  }`}
                 >
-                  <Bookmark size={17} />
-                  Save for later
+                  {isSaved ? (
+                    <>
+                      <Check size={17} className="stroke-[3]" />
+                      Saved
+                    </>
+                  ) : (
+                    <>
+                      <Bookmark size={17} />
+                      Save for later
+                    </>
+                  )}
                 </button>
               </div>
 
