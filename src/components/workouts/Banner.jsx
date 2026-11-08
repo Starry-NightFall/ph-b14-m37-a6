@@ -6,7 +6,7 @@ import Link from "next/link";
 const Banner = () => {
   return (
     <div className="bg-zinc-800 container w-11/12 my-8 py-10 rounded-4xl mx-auto flex flex-wrap flex-col-reverse lg:flex-row justify-between items-center">
-      <div className="lg:ml-14">
+      <div className="lg:ml-14 px-8 lg:px-0">
         <h4 className="text-sm font-bold my-4 text-success">WORKOUT LIBRARY</h4>
         <h1 className="text-5xl font-bold my-4">
           TRAIN WITH INTENT.

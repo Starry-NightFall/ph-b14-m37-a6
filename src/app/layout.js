@@ -1,5 +1,6 @@
 import Navbar from "@/components/Shared/Navbar";
 import "./globals.css";
+import Footer from "@/components/Shared/Footer";
 
 export const metadata = {
   title: "Create Next App",
@@ -11,7 +12,10 @@ export default function RootLayout({ children }) {
     <html lang="en" data-theme="forest" className={"h-full antialiased"}>
       <body className="min-h-full flex flex-col">
         <Navbar />
-        {children}
+        <main className="grow">
+          {children}
+        </main>
+        <Footer />
       </body>
     </html>
   );
