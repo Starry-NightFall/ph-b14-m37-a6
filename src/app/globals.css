@@ -1,4 +1,9 @@
 @import "tailwindcss";
+
 @plugin "daisyui" {
   themes: forest;
+}
+
+@theme {
+  --font-oswald: "Oswald", sans-serif;
 }
