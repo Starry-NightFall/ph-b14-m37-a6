@@ -1,5 +1,9 @@
+import Banner from "@/components/workouts/Banner";
+
 export default function Home() {
   return (
-    <p>Welcome to the Home Page</p>
+    <div>
+      <Banner />
+    </div>
   );
 }
