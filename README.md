@@ -81,7 +81,7 @@ A high-performance, dark-mode gym companion built with **Next.js (App Router)** 
 
 ## 🌐 Deployment & Links
 - **Live Deployment Link:** *[Insert Live Link Here]*
-- **GitHub Repository:** *[Insert GitHub Repository Link Here]*
+- **GitHub Repository:** https://github.com/Starry-NightFall/ph-b14-m37-a6
 
 ---
 
