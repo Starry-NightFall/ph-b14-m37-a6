@@ -11,7 +11,7 @@ const Footer = () => {
           FITLOG
         </h3>
       </aside>
-      <p>Copyright © {new Date().getFullYear()} - All right reserved</p>
+      <p>Copyright © 2026 - All right reserved</p>
     </footer>
   );
 };
